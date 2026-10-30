@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPS — Iqra Private School, Chapahari</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#0b6b3a;--primary-dark:#084d29;--accent:#f0b429;--bg:#f5f7fa;--card:#fff;--text:#1f2937;--muted:#6b7280;--border:#e5e7eb;--danger:#dc2626}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+body.lang-ur{font-family:'Noto Nastaliq Urdu','Noto Sans',Tahoma,sans-serif;line-height:2.2}
+body.lang-hi{font-family:'Noto Sans Devanagari','Noto Sans',Tahoma,sans-serif}
+body[dir="rtl"]{direction:rtl}
+body[dir="rtl"] th,body[dir="rtl"] td{text-align:right}
+body[dir="rtl"] .brand{flex-direction:row-reverse}
+body[dir="rtl"] .toolbar{flex-direction:row-reverse}
+
+/* Login */
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#0b6b3a,#084d29)}
+.login-card{background:#fff;padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.login-logo{width:80px;height:80px;background:var(--accent);border-radius:16px;display:grid;place-items:center;font-weight:800;color:var(--primary-dark);font-size:24px;margin:0 auto 16px}
+.login-card h1{text-align:center;font-size:20px;margin-bottom:4px;color:var(--primary-dark)}
+.login-card .sub{text-align:center;color:var(--muted);font-size:13px;margin-bottom:24px}
+.login-card .lang-switch{display:flex;justify-content:center;gap:8px;margin-bottom:16px}
+.lang-switch button{padding:6px 14px;border:1px solid var(--border);background:#fff;border-radius:20px;cursor:pointer;font-size:13px;font-weight:600}
+.lang-switch button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.login-hint{text-align:center;font-size:12px;color:var(--muted);margin-top:16px;padding:10px;background:#f0fdf4;border-radius:8px}
+.login-err{color:var(--danger);font-size:13px;text-align:center;margin-top:10px;min-height:20px}
+
+/* App header */
+header.app-header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:52px;height:52px;background:var(--accent);border-radius:12px;display:grid;place-items:center;font-weight:800;color:var(--primary-dark);font-size:18px;letter-spacing:1px}
+.brand h1{font-size:18px;font-weight:800}
+.brand p{font-size:12px;opacity:.9}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.user-chip{background:rgba(255,255,255,.2);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.lang-mini{display:flex;gap:4px}
+.lang-mini button{padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;cursor:pointer;font-size:11px;font-weight:600}
+.lang-mini button.active{background:#fff;color:var(--primary-dark)}
+.btn-logout{padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;cursor:pointer;font-size:12px;font-weight:600}
+
+nav.tabs{display:flex;gap:6px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:50;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.tab{padding:9px 14px;border-radius:8px;border:none;background:transparent;cursor:pointer;font-weight:600;color:var(--muted);white-space:nowrap;font-size:13px;font-family:inherit}
+.tab.active{background:var(--primary);color:#fff}
+.tab:hover:not(.active){background:#eef2f7;color:var(--text)}
+
+main{padding:20px;max-width:1200px;margin:0 auto}
+section.page{display:none}
+section.page.active{display:block}
+.card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05);border:1px solid var(--border);margin-bottom:16px}
+.card h2{font-size:17px;margin-bottom:12px;color:var(--primary-dark)}
+.grid{display:grid;gap:14px}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+.stat{background:#fff;border-left:4px solid var(--primary);padding:14px;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+body[dir="rtl"] .stat{border-left:none;border-right:4px solid var(--primary)}
+.stat .num{font-size:22px;font-weight:800;color:var(--primary-dark)}
+.stat .label{font-size:12px;color:var(--muted);margin-top:2px}
+
+label.field{display:block;margin-bottom:10px;font-size:13px;color:var(--muted);font-weight:600}
+input,select,textarea{width:100%;padding:9px 12px;margin-top:4px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;background:#fff;color:var(--text)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--primary);outline-offset:1px;border-color:transparent}
+
+button.btn{padding:10px 18px;border-radius:8px;border:none;background:var(--primary);color:#fff;font-weight:600;cursor:pointer;font-size:14px;font-family:inherit}
+button.btn:hover{background:var(--primary-dark)}
+button.btn.ghost{background:transparent;color:var(--primary);border:1px solid var(--primary)}
+button.btn.ghost:hover{background:#e8f4ec}
+button.btn.danger{background:var(--danger)}
+button.btn.danger:hover{background:#b91c1c}
+button.btn.small{padding:6px 12px;font-size:12px}
+button.btn.gold{background:var(--accent);color:var(--primary-dark)}
+button.btn.gold:hover{background:#d9a41f}
+
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:#f9fafb;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+tr:hover td{background:#fafbfc}
+.empty{text-align:center;color:var(--muted);padding:24px;font-style:italic}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+.att-toggle{display:inline-flex;gap:4px}
+.att-toggle button{padding:5px 10px;font-size:12px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;font-weight:600}
+.att-toggle button.on-present{background:#16a34a;color:#fff;border-color:#16a34a}
+.att-toggle button.on-absent{background:#dc2626;color:#fff;border-color:#dc2626}
+.att-toggle button.on-leave{background:#d97706;color:#fff;border-color:#d97706}
+.att-status-print{display:none}
+
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.toolbar label.field{margin-bottom:0;flex:1;min-width:130px}
+.hint{font-size:12px;color:var(--muted);margin-top:6px}
+.footer-note{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;z-index:200;padding:20px}
+.modal{background:#fff;border-radius:12px;padding:22px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.modal h3{margin-bottom:14px;color:var(--primary-dark)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+
+.print-school-header{display:none;text-align:center;margin-bottom:16px;border-bottom:2px solid var(--primary);padding-bottom:10px}
+.print-school-header h1{font-size:20px;color:var(--primary-dark)}
+.print-school-header p{font-size:12px;color:var(--muted)}
+
+/* Receipt */
+.receipt{border:2px solid var(--primary);border-radius:10px;padding:18px;max-width:500px;margin:10px auto;background:#fff}
+.receipt-head{text-align:center;border-bottom:2px dashed var(--primary);padding-bottom:8px;margin-bottom:12px}
+.receipt-head h3{color:var(--primary-dark);font-size:16px}
+.receipt-head .sub{font-size:11px;color:var(--muted)}
+.receipt-body{font-size:13px}
+.receipt-body .line{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dotted var(--border)}
+.receipt-body .line strong{color:var(--primary-dark)}
+.receipt-total{margin-top:12px;padding:10px;background:#f0fdf4;border-radius:8px;text-align:center;font-size:16px;font-weight:800;color:var(--primary-dark)}
+.receipt-foot{margin-top:20px;display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.receipt-no{text-align:center;font-size:11px;color:var(--muted);margin-top:8px}
+
+@media print{
+  body.printing header.app-header,body.printing nav.tabs,body.printing .no-print{display:none!important}
+  body.printing .page:not(.print-target){display:none!important}
+  body.printing .page.print-target{display:block!important}
+  body.printing .toolbar,body.printing .row-actions,body.printing .footer-note{display:none!important}
+  body.printing main{padding:0;max-width:100%}
+  body.printing .card{box-shadow:none;border:none;padding:0;margin:0}
+  body.printing .print-school-header{display:block!important}
+  body.printing .att-toggle{display:none}
+  body.printing .att-status-print{display:inline!important;font-weight:600}
+  body{background:#fff}
+  .receipt{page-break-inside:avoid;box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginScreen" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">IPS</div>
+    <h1 id="loginTitle">IPS — Iqra Private School</h1>
+    <p class="sub" id="loginSub">Chapahari · Smart School Management</p>
+    <div class="lang-switch">
+      <button data-lang="en" onclick="setLoginLang('en')">English</button>
+      <button data-lang="ur" onclick="setLoginLang('ur')">اردو</button>
+      <button data-lang="hi" onclick="setLoginLang('hi')">हिंदी</button>
+    </div>
+    <label class="field" id="lblUser">Username<input id="loginUser" autocomplete="username"></label>
+    <label class="field" id="lblPass">Password<input id="loginPass" type="password" autocomplete="current-password"></label>
+    <button class="btn" style="width:100%" onclick="doLogin()" id="btnLogin">Login</button>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-hint" id="loginHint">Admin: admin / admin123 &nbsp;·&nbsp; Teacher: teacher / teacher123</div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="appScreen" style="display:none">
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo">IPS</div>
+      <div>
+        <h1 id="appTitle">IPS — Iqra Private School</h1>
+        <p id="appSub">Chapahari · Smart School Management</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="user-chip" id="userChip"></span>
+      <div class="lang-mini">
+        <button data-lang="en" onclick="setLang('en')">EN</button>
+        <button data-lang="ur" onclick="setLang('ur')">اردو</button>
+        <button data-lang="hi" onclick="setLang('hi')">हिं</button>
+      </div>
+      <button class="btn-logout" onclick="doLogout()" id="btnLogout">Logout</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-page="dashboard" data-i18n="nav_dashboard"></button>
+    <button class="tab" data-page="students" data-i18n="nav_students"></button>
+    <button class="tab" data-page="teachers" data-i18n="nav_teachers"></button>
+    <button class="tab" data-page="attendance" data-i18n="nav_attendance"></button>
+    <button class="tab" data-page="results" data-i18n="nav_results"></button>
+    <button class="tab" data-page="fees" data-i18n="nav_fees"></button>
+    <button class="tab" data-page="notes" data-i18n="nav_notes"></button>
+    <button class="tab" data-page="timetable" data-i18n="nav_timetable"></button>
+  </nav>
+
+  <main>
+    <div class="print-school-header" id="printHeader">
+      <h1>IPS — Iqra Private School, Chapahari</h1>
+      <p>Smart School Management</p>
+    </div>
+
+    <section id="dashboard" class="page active"></section>
+    <section id="students" class="page"></section>
+    <section id="teachers" class="page"></section>
+    <section id="attendance" class="page"></section>
+    <section id="results" class="page"></section>
+    <section id="fees" class="page"></section>
+    <section id="notes" class="page"></section>
+    <section id="timetable" class="page"></section>
+  </main>
+  <div class="footer-note" id="footerNote"></div>
+</div>
+
+<script>
+// ============ i18n ============
+const I18N = {
+en:{
+  login_title:'IPS — Iqra Private School', login_sub:'Chapahari · Smart School Management',
+  username:'Username', password:'Password', login:'Login', invalid:'Invalid username or password',
+  admin_hint:'Admin: admin / admin123  ·  Teacher: teacher / teacher123',
+  logout:'Logout',
+  nav_dashboard:'🏠 Dashboard', nav_students:'👨‍🎓 Students', nav_teachers:'👩‍🏫 Teachers',
+  nav_attendance:'✅ Attendance', nav_results:'📝 Results', nav_fees:'💰 Fees',
+  nav_notes:'📌 Notes', nav_timetable:'🗓️ Timetable',
+  app_sub:'Chapahari · Smart School Management',
+  footer:'IPS — Iqra Private School, Chapahari · Data stored locally in your browser',
+  quick:'🚀 Quick Actions', recent:'📊 Recent Activity', backup:'💾 Data Backup',
+  export:'⬇ Export Backup', import:'⬆ Import Backup', backup_hint:'Save your data regularly. Import overwrites current data.',
+  students_count:'Students', teachers_count:'Teachers', today_present:'Today Present', fees_month:'Fees This Month',
+  mark_att:'✅ Mark Today\'s Attendance', add_student_short:'👨‍🎓 Add Student', record_fee_short:'💰 Record Fee',
+  no_activity:'No activity yet',
+  students:'👨‍🎓 Students', search:'Search', class:'Class', add_student:'+ Add Student',
+  roll:'Roll', name:'Name', father:'Father', phone:'Phone', fee:'Fee', actions:'Actions',
+  edit:'Edit', del:'Del', no_students:'No students found.', add_student_t:'Add Student', edit_student_t:'Edit Student',
+  section:'Section', monthly_fee:'Monthly Fee (Rs)', save:'Save', cancel:'Cancel',
+  req_fields:'Name and Class required', confirm_delete:'Delete this record?',
+  teachers:'👩‍🏫 Teachers', add_teacher:'+ Add Teacher', subject:'Subject', no_teachers:'No teachers yet',
+  add_teacher_t:'Add Teacher', edit_teacher_t:'Edit Teacher',
+  attendance:'✅ Daily Attendance', date:'Date', all_present:'All Present', print:'🖨️ Print',
+  present:'Present', absent:'Absent', leave:'Leave', auto_saved:'Auto-saved. Use Print for report.',
+  no_students_class:'No students in this class', status:'Status', all:'All',
+  results:'📝 Exam Results', enter_marks:'Enter Marks', result_card:'Result Card', tabulation:'Tabulation',
+  exam:'Exam', student:'Student', load_new:'Load / New', total:'Total', obtained:'Obtained',
+  save_result:'💾 Save Result', add_subject:'+ Add Subject', subject_name:'Subject',
+  select_exam_student:'Select exam and student', add_at_least_one:'Add at least one subject',
+  saved:'Saved!', percentage:'Percentage', grade:'Grade', position:'Position',
+  class_teacher:'Class Teacher', principal:'Principal', no_result:'No result for this student',
+  no_results_class:'No results for this exam/class', select:'-- select --',
+  fees:'💰 Fee Records', month:'Month', amount:'Amount (Rs)', add:'+ Add',
+  total_fees:'Total', no_fees:'No fee records yet', print_receipt:'🧾 Receipt', receipt:'Fee Receipt',
+  receipt_no:'Receipt No', received_from:'Received From', amount_paid:'Amount Paid', date_paid:'Date',
+  paid:'PAID', sign:'Authorized Signature', all_fields_req:'All fields required',
+  notes:'📌 Homework / Notes / Diary', title:'Title', details:'Details', add_note:'+ Add Note',
+  no_notes:'No notes yet',
+  timetable:'🗓️ Timetable', day:'Day', period:'Period',
+  day_mon:'Monday', day_tue:'Tuesday', day_wed:'Wednesday', day_thu:'Thursday', day_fri:'Friday', day_sat:'Saturday',
+  role_admin:'Administrator', role_teacher:'Teacher'
+},
+ur:{
+  login_title:'IPS — اقبال پرائیویٹ اسکول', login_sub:'چپاہاڑی · اسمارٹ اسکول مینجمنٹ',
+  username:'صارف نام', password:'پاس ورڈ', login:'لاگ ان', invalid:'صارف نام یا پاس ورڈ غلط ہے',
+  admin_hint:'ایڈمن: admin / admin123  ·  ٹیچر: teacher / teacher123',
+  logout:'لاگ آؤٹ',
+  nav_dashboard:'🏠 ڈیش بورڈ', nav_students:'👨‍🎓 طلبہ', nav_teachers:'👩‍🏫 اساتذہ',
+  nav_attendance:'✅ حاضری', nav_results:'📝 نتائج', nav_fees:'💰 فیس',
+  nav_notes:'📌 نوٹس', nav_timetable:'🗓️ ٹائم ٹیبل',
+  app_sub:'چپاہاڑی · اسمارٹ اسکول مینجمنٹ',
+  footer:'IPS — اقبال پرائیویٹ اسکول، چپاہاڑی · ڈیٹا آپ کے براؤزر میں محفوظ ہے',
+  quick:'🚀 فوری کام', recent:'📊 حالیہ سرگرمی', backup:'💾 ڈیٹا بیک اپ',
+  export:'⬇ بیک اپ ایکسپورٹ', import:'⬆ بیک اپ امپورٹ', backup_hint:'اپنا ڈیٹا باقاعدگی سے محفوظ کریں۔ امپورٹ موجودہ ڈیٹا کو تبدیل کر دے گا۔',
+  students_count:'طلبہ', teachers_count:'اساتذہ', today_present:'آج حاضر', fees_month:'اس ماہ کی فیس',
+  mark_att:'✅ آج کی حاضری لگائیں', add_student_short:'👨‍🎓 طالب علم شامل کریں', record_fee_short:'💰 فیس درج کریں',
+  no_activity:'ابھی کوئی سرگرمی نہیں',
+  students:'👨‍🎓 طلبہ', search:'تلاش', class:'کلاس', add_student:'+ طالب علم شامل کریں',
+  roll:'رول', name:'نام', father:'والد', phone:'فون', fee:'فیس', actions:'اعمال',
+  edit:'ترمیم', del:'حذف', no_students:'کوئی طالب علم نہیں ملا۔', add_student_t:'طالب علم شامل کریں', edit_student_t:'طالب علم میں ترمیم',
+  section:'سیکشن', monthly_fee:'ماہانہ فیس (روپے)', save:'محفوظ کریں', cancel:'منسوخ',
+  req_fields:'نام اور کلاس لازمی ہیں', confirm_delete:'کیا یہ ریکارڈ حذف کریں؟',
+  teachers:'👩‍🏫 اساتذہ', add_teacher:'+ استاد شامل کریں', subject:'مضمون', no_teachers:'ابھی کوئی استاد نہیں',
+  add_teacher_t:'استاد شامل کریں', edit_teacher_t:'استاد میں ترمیم',
+  attendance:'✅ روزانہ حاضری', date:'تاریخ', all_present:'سب حاضر', print:'🖨️ پرنٹ',
+  present:'حاضر', absent:'غیر حاضر', leave:'چھٹی', auto_saved:'خود بخود محفوظ۔ رپورٹ کے لیے پرنٹ دبائیں۔',
+  no_students_class:'اس کلاس میں کوئی طالب علم نہیں', status:'حالت', all:'سب',
+  results:'📝 امتحانی نتائج', enter_marks:'نمبر درج کریں', result_card:'ریزلٹ کارڈ', tabulation:'ٹیبلولیشن',
+  exam:'امتحان', student:'طالب علم', load_new:'لوڈ / نیا', total:'کل', obtained:'حاصل',
+  save_result:'💾 نتیجہ محفوظ کریں', add_subject:'+ مضمون شامل کریں', subject_name:'مضمون',
+  select_exam_student:'امتحان اور طالب علم منتخب کریں', add_at_least_one:'کم از کم ایک مضمون شامل کریں',
+  saved:'محفوظ ہو گیا!', percentage:'فیصد', grade:'گریڈ', position:'پوزیشن',
+  class_teacher:'کلاس ٹیچر', principal:'پرنسپل', no_result:'اس طالب علم کا کوئی نتیجہ نہیں',
+  no_results_class:'اس امتحان/کلاس کے کوئی نتائج نہیں', select:'-- منتخب کریں --',
+  fees:'💰 فیس ریکارڈ', month:'مہینہ', amount:'رقم (روپے)', add:'+ شامل کریں',
+  total_fees:'کل', no_fees:'ابھی کوئی فیس ریکارڈ نہیں', print_receipt:'🧾 رسید', receipt:'فیس رسید',
+  receipt_no:'رسید نمبر', received_from:'موصول از', amount_paid:'ادا شدہ رقم', date_paid:'تاریخ',
+  paid:'ادا شدہ', sign:'مجاز دستخط', all_fields_req:'تمام خانے لازمی ہیں',
+  notes:'📌 ہوم ورک / نوٹس / ڈائری', title:'عنوان', details:'تفصیل', add_note:'+ نوٹ شامل کریں',
+  no_notes:'ابھی کوئی نوٹ نہیں',
+  timetable:'🗓️ ٹائم ٹیبل', day:'دن', period:'پیریڈ',
+  day_mon:'پیر', day_tue:'منگل', day_wed:'بدھ', day_thu:'جمعرات', day_fri:'جمعہ', day_sat:'ہفتہ',
+  role_admin:'ایڈمن', role_teacher:'استاد'
+},
+hi:{
+  login_title:'IPS — इक़रा प्राइवेट स्कूल', login_sub:'चपाहाड़ी · स्मार्ट स्कूल मैनेजमेंट',
+  username:'उपयोगकर्ता नाम', password:'पासवर्ड', login:'लॉगिन', invalid:'उपयोगकर्ता नाम या पासवर्ड गलत है',
+  admin_hint:'एडमिन: admin / admin123  ·  टीचर: teacher / teacher123',
+  logout:'लॉगआउट',
+  nav_dashboard:'🏠 डैशबोर्ड', nav_students:'👨‍🎓 छात्र', nav_teachers:'👩‍🏫 शिक्षक',
+  nav_attendance:'✅ उपस्थिति', nav_results:'📝 परिणाम', nav_fees:'💰 फीस',
+  nav_notes:'📌 नोट्स', nav_timetable:'🗓️ समय-सारिणी',
+  app_sub:'चपाहाड़ी · स्मार्ट स्कूल मैनेजमेंट',
+  footer:'IPS — इक़रा प्राइवेट स्कूल, चपाहाड़ी · डेटा आपके ब्राउज़र में सुरक्षित है',
+  quick:'🚀 त्वरित कार्य', recent:'📊 हाल की गतिविधि', backup:'💾 डेटा बैकअप',
+  export:'⬇ बैकअप निर्यात', import:'⬆ बैकअप आयात', backup_hint:'अपना डेटा नियमित रूप से सुरक्षित करें। आयात मौजूदा डेटा को बदल देगा।',
+  students_count:'छात्र', teachers_count:'शिक्षक', today_present:'आज उपस्थित', fees_month:'इस माह की फीस',
+  mark_att:'✅ आज की उपस्थिति दर्ज करें', add_student_short:'👨‍🎓 छात्र जोड़ें', record_fee_short:'💰 फीस दर्ज करें',
+  no_activity:'अभी कोई गतिविधि नहीं',
+  students:'👨‍🎓 छात्र', search:'खोजें', class:'कक्षा', add_student:'+ छात्र जोड़ें',
+  roll:'रोल', name:'नाम', father:'पिता', phone:'फ़ोन', fee:'फीस', actions:'क्रियाएं',
+  edit:'संपादित', del:'हटाएं', no_students:'कोई छात्र नहीं मिला।', add_student_t:'छात्र जोड़ें', edit_student_t:'छात्र संपादित करें',
+  section:'सेक्शन', monthly_fee:'मासिक फीस (रु.)', save:'सहेजें', cancel:'रद्द',
+  req_fields:'नाम और कक्षा आवश्यक हैं', confirm_delete:'क्या यह रिकॉर्ड हटाएं?',
+  teachers:'👩‍🏫 शिक्षक', add_teacher:'+ शिक्षक जोड़ें', subject:'विषय', no_teachers:'अभी कोई शिक्षक नहीं',
+  add_teacher_t:'शिक्षक जोड़ें', edit_teacher_t:'शिक्षक संपादित करें',
+  attendance:'✅ दैनिक उपस्थिति', date:'तारीख', all_present:'सभी उपस्थित', print:'🖨️ प्रिंट',
+  present:'उपस्थित', absent:'अनुपस्थित', leave:'अवकाश', auto_saved:'स्वतः सहेजा गया। रिपोर्ट के लिए प्रिंट दबाएं।',
+  no_students_class:'इस कक्षा में कोई छात्र नहीं', status:'स्थिति', all:'सभी',
+  results:'📝 परीक्षा परिणाम', enter_marks:'अंक दर्ज करें', result_card:'रिज़ल्ट कार्ड', tabulation:'टैबुलेशन',
+  exam:'परीक्षा', student:'छात्र', load_new:'लोड / नया', total:'कुल', obtained:'प्राप्त',
+  save_result:'💾 परिणाम सहेजें', add_subject:'+ विषय जोड़ें', subject_name:'विषय',
+  select_exam_student:'परीक्षा और छात्र चुनें', add_at_least_one:'कम से कम एक विषय जोड़ें',
+  saved:'सहेजा गया!', percentage:'प्रतिशत', grade:'ग्रेड', position:'स्थान',
+  class_teacher:'कक्षा शिक्षक', principal:'प्राचार्य', no_result:'इस छात्र का कोई परिणाम नहीं',
+  no_results_class:'इस परीक्षा/कक्षा के कोई परिणाम नहीं', select:'-- चुनें --',
+  fees:'💰 फीस रिकॉर्ड', month:'माह', amount:'राशि (रु.)', add:'+ जोड़ें',
+  total_fees:'कुल', no_fees:'अभी कोई फीस रिकॉर्ड नहीं', print_receipt:'🧾 रसीद', receipt:'फीस रसीद',
+  receipt_no:'रसीद नंबर', received_from:'प्राप्तकर्ता', amount_paid:'भुगतान राशि', date_paid:'तारीख',
+  paid:'भुगतान', sign:'अधिकृत हस्ताक्षर', all_fields_req:'सभी फ़ील्ड आवश्यक हैं',
+  notes:'📌 होमवर्क / नोट्स / डायरी', title:'शीर्षक', details:'विवरण', add_note:'+ नोट जोड़ें',
+  no_notes:'अभी कोई नोट नहीं',
+  timetable:'🗓️ समय-सारिणी', day:'दिन', period:'पीरियड',
+  day_mon:'सोमवार', day_tue:'मंगलवार', day_wed:'बुधवार', day_thu:'गुरुवार', day_fri:'शुक्रवार', day_sat:'शनिवार',
+  role_admin:'एडमिन', role_teacher:'शिक्षक'
+}
+};
+
+let LANG = localStorage.getItem('ips_lang') || 'en';
+function T(k){ return (I18N[LANG] && I18N[LANG][k]) || I18N.en[k] || k; }
+function applyLang(){
+  document.documentElement.lang = LANG;
+  document.body.className = 'lang-' + LANG;
+  document.body.dir = (LANG==='ur') ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = T(el.dataset.i18n));
+  // Login screen
+  document.getElementById('loginTitle').textContent = T('login_title');
+  document.getElementById('loginSub').textContent = T('login_sub');
+  document.getElementById('lblUser').childNodes[0].textContent = T('username');
+  document.getElementById('lblPass').childNodes[0].textContent = T('password');
+  document.getElementById('btnLogin').textContent = T('login');
+  document.getElementById('loginHint').textContent = T('admin_hint');
+  document.querySelectorAll('.lang-switch button, .lang-mini button').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === LANG);
+  });
+  document.getElementById('appTitle').textContent = T('login_title');
+  document.getElementById('appSub').textContent = T('app_sub');
+  document.getElementById('btnLogout').textContent = T('logout');
+  document.getElementById('footerNote').textContent = T('footer');
+  if(CURRENT_USER){
+    const roleKey = CURRENT_USER.role === 'admin' ? 'role_admin' : 'role_teacher';
+    document.getElementById('userChip').textContent = CURRENT_USER.name + ' · ' + T(roleKey);
+  }
+  // Re-render current page
+  const active = document.querySelector('.tab.active');
+  if(active) renderPage(active.dataset.page);
+}
+function setLang(l){ LANG = l; localStorage.setItem('ips_lang', l); applyLang(); }
+function setLoginLang(l){ LANG = l; localStorage.setItem('ips_lang', l); applyLang(); }
+
+// ============ Data ============
+const DB_KEY = 'ips_school_db_v1';
+const DEFAULT_DB = {
+  students:[
+    {id:'s1',name:'Ali Ahmed',fatherName:'Ahmed Khan',className:'5',section:'A',rollNo:'01',phone:'03001234567',monthlyFee:1500},
+    {id:'s2',name:'Fatima Bibi',fatherName:'Muhammad Aslam',className:'5',section:'A',rollNo:'02',phone:'03007654321',monthlyFee:1500},
+    {id:'s3',name:'Hassan Ali',fatherName:'Ghulam Abbas',className:'4',section:'A',rollNo:'01',phone:'03009998888',monthlyFee:1200},
+  ],
+  teachers:[
+    {id:'t1',name:'Sir Usman',subject:'Mathematics',phone:'03001112222'},
+    {id:'t2',name:'Miss Ayesha',subject:'English',phone:'03003334444'},
+  ],
+  attendance:{},results:[],fees:[],notes:[],timetable:{},feeCounter:0
+};
+let db = load();
+function load(){ try{const r=localStorage.getItem(DB_KEY);if(r)return JSON.parse(r);}catch(e){} return JSON.parse(JSON.stringify(DEFAULT_DB)); }
+function save(){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+function uid(p){ return p+'_'+Math.random().toString(36).slice(2,9); }
+function classes(){ return Array.from(new Set(db.students.map(s=>s.className))).sort((a,b)=>(parseInt(a)||0)-(parseInt(b)||0)); }
+function studentById(id){ return db.students.find(s=>s.id===id); }
+function studentLabel(s){ return s.name+' (Roll '+s.rollNo+', '+T('class')+' '+s.className+'-'+s.section+')'; }
+function today(){ return new Date().toISOString().slice(0,10); }
+function monthNow(){ return new Date().toISOString().slice(0,7); }
+
+// ============ Auth ============
+const USERS = {
+  admin:{password:'admin123',role:'admin',name:'Admin'},
+  teacher:{password:'teacher123',role:'teacher',name:'Teacher'}
+};
+let CURRENT_USER = null;
+function doLogin(){
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  if(USERS[u] && USERS[u].password === p){
+    CURRENT_USER = { username:u, role:USERS[u].role, name:USERS[u].name };
+    sessionStorage.setItem('ips_user', JSON.stringify(CURRENT_USER));
+    err.textContent = '';
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appScreen').style.display = 'block';
+    applyLang();
+    renderPage('dashboard');
+  } else {
+    err.textContent = T('invalid');
+  }
+}
+function doLogout(){
+  CURRENT_USER = null;
+  sessionStorage.removeItem('ips_user');
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'grid';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+// ============ Navigation ============
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(t.dataset.page).classList.add('active');
+  renderPage(t.dataset.page);
+}));
+function goPage(p){ document.querySelector('.tab[data-page="'+p+'"]').click(); }
+
+function renderPage(p){
+  if(!CURRENT_USER) return;
+  if(p==='dashboard') renderDashboard();
+  else if(p==='students') renderStudents();
+  else if(p==='teachers') renderTeachers();
+  else if(p==='attendance') renderAttendance();
+  else if(p==='results') renderResults();
+  else if(p==='fees') renderFees();
+  else if(p==='notes') renderNotes();
+  else if(p==='timetable') renderTimetable();
+}
+
+// ============ Modal ============
+function openModal(html){
+  const m = document.createElement('div');
+  m.className = 'modal-overlay';
+  m.innerHTML = '<div class="modal">'+html+'</div>';
+  m.addEventListener('click', e => { if(e.target===m) m.remove(); });
+  document.body.appendChild(m);
+}
+
+// ============ Dashboard ============
+function renderDashboard(){
+  const todayAtt = db.attendance[today()] || {};
+  const present = Object.values(todayAtt).filter(v=>v==='present').length;
+  const marked = Object.keys(todayAtt).length;
+  const feesMonth = db.fees.filter(f=>f.date && f.date.startsWith(monthNow())).reduce((a,f)=>a+Number(f.amount||0),0);
+  document.getElementById('dashboard').innerHTML =
+    '<div class="grid grid-4">' +
+    '<div class="stat"><div class="num">'+db.students.length+'</div><div class="label">'+T('students_count')+'</div></div>' +
+    '<div class="stat"><div class="num">'+db.teachers.length+'</div><div class="label">'+T('teachers_count')+'</div></div>' +
+    '<div class="stat"><div class="num">'+present+'/'+marked+'</div><div class="label">'+T('today_present')+'</div></div>' +
+    '<div class="stat"><div class="num">Rs '+feesMonth.toLocaleString()+'</div><div class="label">'+T('fees_month')+'</div></div>' +
+    '</div>' +
+    '<div class="card"><h2>'+T('quick')+'</h2><div class="grid grid-3">' +
+    '<button class="btn ghost" onclick="goPage(\'attendance\')">'+T('mark_att')+'</button>' +
+    '<button class="btn ghost" onclick="goPage(\'students\')">'+T('add_student_short')+'</button>' +
+    '<button class="btn ghost" onclick="goPage(\'fees\')">'+T('record_fee_short')+'</button>' +
+    '</div></div>' +
+    '<div class="card"><h2>'+T('recent')+'</h2><div id="dashRecent"></div></div>' +
+    '<div class="card"><h2>'+T('backup')+'</h2><div class="grid grid-2">' +
+    '<button class="btn ghost" onclick="exportData()">'+T('export')+'</button>' +
+    '<button class="btn ghost" onclick="document.getElementById(\'importFile\').click()">'+T('import')+'</button>' +
+    '<input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">' +
+    '</div><div class="hint">'+T('backup_hint')+'</div></div>';
+  const recent = [
+    ...db.fees.slice(-3).map(f=>({t:'Fee',txt:(studentById(f.studentId)?.name||'?')+' — Rs '+f.amount,d:f.date})),
+    ...db.notes.slice(-3).map(n=>({t:'Note',txt:n.title,d:n.date})),
+    ...db.results.slice(-3).map(r=>({t:'Result',txt:r.exam+' — '+(studentById(r.studentId)?.name||'?'),d:r.date}))
+  ].sort((a,b)=>(b.d||'').localeCompare(a.d||'')).slice(0,6);
+  document.getElementById('dashRecent').innerHTML = recent.length
+    ? recent.map(r=>'<div style="padding:10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;"><span><strong>'+r.t+':</strong> '+r.txt+'</span><span style="color:var(--muted);font-size:12px;">'+(r.d||'')+'</span></div>').join('')
+    : '<div class="empty">'+T('no_activity')+'</div>';
+}
+
+// ============ Students ============
+function renderStudents(){
+  document.getElementById('students').innerHTML =
+    '<div class="card"><h2>'+T('students')+'</h2>' +
+    '<div class="toolbar"><label class="field">'+T('search')+'<input id="stuSearch" oninput="renderStudentTable()"></label>' +
+    '<label class="field">'+T('class')+'<select id="stuClassFilter" onchange="renderStudentTable()"><option value="">'+T('all')+'</option>' +
+    classes().map(c=>'<option value="'+c+'">'+T('class')+' '+c+'</option>').join('')+'</select></label>' +
+    '<button class="btn" onclick="openStudentForm()">'+T('add_student')+'</button></div>' +
+    '<div id="studentTable"></div></div>';
+  renderStudentTable();
+}
+function renderStudentTable(){
+  const q = (document.getElementById('stuSearch').value||'').toLowerCase();
+  const c = document.getElementById('stuClassFilter').value;
+  let list = db.students.slice();
+  if(q) list = list.filter(s=>s.name.toLowerCase().includes(q)||(s.rollNo||'').includes(q)||(s.phone||'').includes(q));
+  if(c) list = list.filter(s=>s.className===c);
+  list.sort((a,b)=>(a.className||'').localeCompare(b.className||'')||(a.rollNo||'').localeCompare(b.rollNo||''));
+  const el = document.getElementById('studentTable');
+  if(!list.length){ el.innerHTML = '<div class="empty">'+T('no_students')+'</div>'; return; }
+  el.innerHTML = '<div style="overflow-x:auto;"><table><thead><tr><th>'+T('roll')+'</th><th>'+T('name')+'</th><th>'+T('class')+'</th><th>'+T('father')+'</th><th>'+T('phone')+'</th><th>'+T('fee')+'</th><th>'+T('actions')+'</th></tr></thead><tbody>'+
+    list.map(s=>'<tr><td>'+s.rollNo+'</td><td><strong>'+s.name+'</strong></td><td>'+s.className+'-'+s.section+'</td><td>'+(s.fatherName||'-')+'</td><td>'+(s.phone||'-')+'</td><td>Rs '+s.monthlyFee+'</td><td class="row-actions"><button class="btn ghost small" onclick="openStudentForm(\''+s.id+'\')">'+T('edit')+'</button><button class="btn danger small" onclick="deleteStudent(\''+s.id+'\')">'+T('del')+'</button></td></tr>').join('')+
+    '</tbody></table></div>';
+}
+function openStudentForm(id){
+  const s = id ? db.students.find(x=>x.id===id) : {};
+  openModal('<h3>'+(id?T('edit_student_t'):T('add_student_t'))+'</h3>' +
+    '<label class="field">'+T('name')+'<input id="f_name" value="'+(s.name||'')+'"></label>' +
+    '<div class="grid grid-2"><label class="field">'+T('father')+'<input id="f_father" value="'+(s.fatherName||'')+'"></label>' +
+    '<label class="field">'+T('phone')+'<input id="f_phone" value="'+(s.phone||'')+'"></label></div>' +
+    '<div class="grid grid-3"><label class="field">'+T('class')+'<input id="f_class" value="'+(s.className||'')+'"></label>' +
+    '<label class="field">'+T('section')+'<input id="f_section" value="'+(s.section||'A')+'"></label>' +
+    '<label class="field">'+T('roll')+'<input id="f_roll" value="'+(s.rollNo||'')+'"></label></div>' +
+    '<label class="field">'+T('monthly_fee')+'<input type="number" id="f_fee" value="'+(s.monthlyFee||0)+'"></label>' +
+    '<div class="modal-actions"><button class="btn ghost" onclick="this.closest(\'.modal-overlay\').remove()">'+T('cancel')+'</button>' +
+    '<button class="btn" onclick="saveStudent(\''+(id||'')+'\')">'+T('save')+'</button></div>');
+}
+function saveStudent(id){
+  const data = {
+    name:document.getElementById('f_name').value.trim(),
+    fatherName:document.getElementById('f_father').value.trim(),
+    phone:document.getElementById('f_phone').value.trim(),
+    className:document.getElementById('f_class').value.trim(),
+    section:document.getElementById('f_section').value.trim()||'A',
+    rollNo:document.getElementById('f_roll').value.trim(),
+    monthlyFee:Number(document.getElementById('f_fee').value)||0
+  };
+  if(!data.name || !data.className){ alert(T('req_fields')); return; }
+  if(id) Object.assign(db.students.find(s=>s.id===id), data);
+  else db.students.push({id:uid('s'),...data});
+  save(); document.querySelector('.modal-overlay').remove(); renderStudents();
+}
+function deleteStudent(id){
+  if(!confirm(T('confirm_delete'))) return;
+  db.students = db.students.filter(s=>s.id!==id); save(); renderStudentTable();
+}
+
+// ============ Teachers ============
+function renderTeachers(){
+  document.getElementById('teachers').innerHTML =
+    '<div class="card"><h2>'+T('teachers')+'</h2><div class="toolbar"><button class="btn" onclick="openTeacherForm()">'+T('add_teacher')+'</button></div><div id="teacherTable"></div></div>';
+  renderTeacherTable();
+}
+function renderTeacherTable(){
+  const el = document.getElementById('teacherTable');
+  if(!db.teachers.length){ el.innerHTML = '<div class="empty">'+T('no_teachers')+'</div>'; return; }
+  el.innerHTML = '<div style="overflow-x:auto;"><table><thead><tr><th>'+T('name')+'</th><th>'+T('subject')+'</th><th>'+T('phone')+'</th><th>'+T('actions')+'</th></tr></thead><tbody>'+
+    db.teachers.map(t=>'<tr><td><strong>'+t.name+'</strong></td><td>'+(t.subject||'-')+'</td><td>'+(t.phone||'-')+'</td><td class="row-actions"><button class="btn ghost small" onclick="openTeacherForm(\''+t.id+'\')">'+T('edit')+'</button><button class="btn danger small" onclick="deleteTeacher(\''+t.id+'\')">'+T('del')+'</button></td></tr>').join('')+
+    '</tbody></table></div>';
+}
+function openTeacherForm(id){
+  const t = id ? db.teachers.find(x=>x.id===id) : {};
+  openModal('<h3>'+(id?T('edit_teacher_t'):T('add_teacher_t'))+'</h3>' +
+    '<label class="field">'+T('name')+'<input id="t_name" value="'+(t.name||'')+'"></label>' +
+    '<label class="field">'+T('subject')+'<input id="t_subject" value="'+(t.subject||'')+'"></label>' +
+    '<label class="field">'+T('phone')+'<input id="t_phone" value="'+(t.phone||'')+'"></label>' +
+    '<div class="modal-actions"><button class="btn ghost" onclick="this.closest(\'.modal-overlay\').remove()">'+T('cancel')+'</button>' +
+    '<button class="btn" onclick="saveTeacher(\''+(id||'')+'\')">'+T('save')+'</button></div>');
+}
+function saveTeacher(id){
+  const data = {name:document.getElementById('t_name').value.trim(),subject:document.getElementById('t_subject').value.trim(),phone:document.getElementById('t_phone').value.trim()};
+  if(!data.name){ alert(T('req_fields')); return; }
+  if(id) Object.assign(db.teachers.find(t=>t.id===id), data);
+  else db.teachers.push({id:uid('t'),...data});
+  save(); document.querySelector('.modal-overlay').remove(); renderTeacherTable();
+}
+function deleteTeacher(id){
+  if(!confirm(T('confirm_delete'))) return;
+  db.teachers = db.teachers.filter(t=>t.id!==id); save(); renderTeacherTable();
+}
+
+// ============ Attendance ============
+let attDate = today();
+let attClass = '';
+function renderAttendance(){
+  const cls = classes();
+  if(!attClass) attClass = cls[0] || '';
+  document.getElementById('attendance').innerHTML =
+    '<div class="card"><h2>'+T('attendance')+'</h2>' +
+    '<div class="toolbar"><label class="field">'+T('date')+'<input type="date" value="'+attDate+'" onchange="attDate=this.value; renderAttendance()"></label>' +
+    '<label class="field">'+T('class')+'<select onchange="attClass=this.value; renderAttendance()">' +
+    (cls.map(c=>'<option value="'+c+'" '+(c===attClass?'selected':'')+'>'+T('class')+' '+c+'</option>').join('') || '<option>--</option>') +
+    '</select></label><button class="btn" onclick="markAllPresent()">'+T('all_present')+'</button>' +
+    '<button class="btn ghost" onclick="printSection(\'attendance\')">'+T('print')+'</button></div>' +
+    '<div id="attList"></div></div>';
+  renderAttList();
+}
+function renderAttList(){
+  const students = db.students.filter(s=>s.className===attClass).sort((a,b)=>(a.rollNo||'').localeCompare(b.rollNo||''));
+  const el = document.getElementById('attList');
+  if(!students.length){ el.innerHTML = '<div class="empty">'+T('no_students_class')+'</div>'; return; }
+  const day = db.attendance[attDate] || {};
+  el.innerHTML = '<div style="margin-bottom:10px;padding:8px;background:#f9fafb;border-radius:6px;"><strong>'+T('class')+' '+attClass+'</strong> — '+T('date')+': <strong>'+attDate+'</strong></div>' +
+    '<div style="overflow-x:auto;"><table><thead><tr><th>'+T('roll')+'</th><th>'+T('name')+'</th><th>'+T('status')+'</th></tr></thead><tbody>' +
+    students.map(s=>{
+      const st = day[s.id]||'';
+      return '<tr><td>'+s.rollNo+'</td><td>'+s.name+'</td><td>'+
+        '<div class="att-toggle">' +
+        '<button class="'+(st==='present'?'on-present':'')+'" onclick="setAtt(\''+s.id+'\',\'present\')">'+T('present')+'</button>' +
+        '<button class="'+(st==='absent'?'on-absent':'')+'" onclick="setAtt(\''+s.id+'\',\'absent\')">'+T('absent')+'</button>' +
+        '<button class="'+(st==='leave'?'on-leave':'')+'" onclick="setAtt(\''+s.id+'\',\'leave\')">'+T('leave')+'</button>' +
+        '</div><span class="att-status-print">'+(st?T(st):'—')+'</span></td></tr>';
+    }).join('') +
+    '</tbody></table></div><div class="hint">'+T('auto_saved')+'</div>';
+}
+function setAtt(sid, status){
+  if(!db.attendance[attDate]) db.attendance[attDate] = {};
+  db.attendance[attDate][sid] = status; save(); renderAttList();
+}
+function markAllPresent(){
+  const students = db.students.filter(s=>s.className===attClass);
+  if(!db.attendance[attDate]) db.attendance[attDate] = {};
+  students.forEach(s=>db.attendance[attDate][s.id]='present');
+  save(); renderAttList();
+}
+
+// ============ Results ============
+let resTab = 'entry', resExam = '', resStudent = '', editSubjects = [];
+function renderResults(){
+  document.getElementById('results').innerHTML =
+    '<div class="card"><h2>'+T('results')+'</h2>' +
+    '<div class="toolbar no-print">' +
+    '<button class="btn '+(resTab==='entry'?'':'ghost')+'" onclick="resTab=\'entry\'; renderResults()">'+T('enter_marks')+'</button>' +
+    '<button class="btn '+(resTab==='card'?'':'ghost')+'" onclick="resTab=\'card\'; renderResults()">'+T('result_card')+'</button>' +
+    '<button class="btn '+(resTab==='tab'?'':'ghost')+'" onclick="resTab=\'tab\'; renderResults()">'+T('tabulation')+'</button>' +
+    '</div><div id="resBody"></div></div>';
+  if(resTab==='entry') renderResultEntry();
+  else if(resTab==='card') renderResultCard();
+  else renderTabulation();
+}
+function renderResultEntry(){
+  document.getElementById('resBody').innerHTML =
+    '<div class="toolbar"><label class="field">'+T('exam')+'<input id="resExamName" value="'+resExam+'" placeholder="First Term" oninput="resExam=this.value"></label>' +
+    '<label class="field">'+T('student')+'<select id="resStudentSel"><option value="">'+T('select')+'</option>' +
+    db.students.map(s=>'<option value="'+s.id+'">'+studentLabel(s)+'</option>').join('') +
+    '</select></label><button class="btn" onclick="loadResultForEdit()">'+T('load_new')+'</button></div><div id="resEditor"></div>';
+}
+function loadResultForEdit(){
+  const exam = document.getElementById('resExamName').value.trim();
+  const sid = document.getElementById('resStudentSel').value;
+  if(!exam || !sid){ alert(T('select_exam_student')); return; }
+  resExam = exam; resStudent = sid;
+  const ex = db.results.find(r=>r.exam===exam && r.studentId===sid);
+  editSubjects = ex ? JSON.parse(JSON.stringify(ex.subjects)) : [
+    {name:'Mathematics',total:100,obtained:0},
+    {name:'English',total:100,obtained:0},
+    {name:'Urdu',total:100,obtained:0}
+  ];
+  renderEditor();
+}
+function renderEditor(){
+  document.getElementById('resEditor').innerHTML =
+    '<div style="overflow-x:auto;"><table><thead><tr><th>'+T('subject_name')+'</th><th>'+T('total')+'</th><th>'+T('obtained')+'</th><th></th></tr></thead><tbody>' +
+    editSubjects.map((s,i)=>'<tr><td><input value="'+s.name+'" oninput="editSubjects['+i+'].name=this.value"></td>' +
+      '<td><input type="number" value="'+s.total+'" oninput="editSubjects['+i+'].total=Number(this.value)" style="width:90px"></td>' +
+      '<td><input type="number" value="'+s.obtained+'" oninput="editSubjects['+i+'].obtained=Number(this.value)" style="width:90px"></td>' +
+      '<td><button class="btn danger small" onclick="editSubjects.splice('+i+',1); renderEditor()">×</button></td></tr>').join('') +
+    '</tbody></table></div><div style="margin-top:10px;display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;">' +
+    '<button class="btn ghost small" onclick="editSubjects.push({name:\'\',total:100,obtained:0});renderEditor()">'+T('add_subject')+'</button>' +
+    '<button class="btn" onclick="saveResult()">'+T('save_result')+'</button></div>';
+}
+function saveResult(){
+  if(!editSubjects.length){ alert(T('add_at_least_one')); return; }
+  const ex = db.results.find(r=>r.exam===resExam && r.studentId===resStudent);
+  if(ex){ ex.subjects = JSON.parse(JSON.stringify(editSubjects)); ex.date = today(); }
+  else db.results.push({id:uid('r'),exam:resExam,studentId:resStudent,subjects:JSON.parse(JSON.stringify(editSubjects)),date:today()});
+  save(); alert(T('saved'));
+}
+function renderResultCard(){
+  const exams = [...new Set(db.results.map(r=>r.exam))];
+  document.getElementById('resBody').innerHTML =
+    '<div class="toolbar"><label class="field">'+T('exam')+'<select id="cardExam" onchange="renderCardPreview()">' +
+    exams.map(e=>'<option>'+e+'</option>').join('')+'</select></label>' +
+    '<label class="field">'+T('student')+'<select id="cardStudent" onchange="renderCardPreview()"><option value="">'+T('select')+'</option>' +
+    db.students.map(s=>'<option value="'+s.id+'">'+studentLabel(s)+'</option>').join('') +
+    '</select></label><button class="btn" onclick="printSection(\'results\')">'+T('print')+'</button></div><div id="cardPreview"></div>';
+}
+function renderCardPreview(){
+  const exam = document.getElementById('cardExam').value;
+  const sid = document.getElementById('cardStudent').value;
+  const el = document.getElementById('cardPreview');
+  if(!exam || !sid){ el.innerHTML=''; return; }
+  const r = db.results.find(x=>x.exam===exam && x.studentId===sid);
+  if(!r){ el.innerHTML = '<div class="empty">'+T('no_result')+'</div>'; return; }
+  el.innerHTML = buildResultCardHTML(r);
+}
+function getGrade(p){ p=Number(p); if(p>=90)return'A+';if(p>=80)return'A';if(p>=70)return'B';if(p>=60)return'C';if(p>=50)return'D';if(p>=40)return'E';return'F'; }
+function getPosition(r){
+  const s = studentById(r.studentId); if(!s) return '-';
+  const same = db.results.filter(x=>{const st=studentById(x.studentId);return x.exam===r.exam && st && st.className===s.className;});
+  const arr = same.map(x=>{const mx=x.subjects.reduce((a,b)=>a+Number(b.total||0),0);const ob=x.subjects.reduce((a,b)=>a+Number(b.obtained||0),0);return{id:x.studentId,pct:mx?ob/mx:0};}).sort((a,b)=>b.pct-a.pct);
+  const i = arr.findIndex(x=>x.id===r.studentId);
+  return i>=0 ? (i+1)+'/'+arr.length : '-';
+}
+function buildResultCardHTML(r){
+  const s = studentById(r.studentId); if(!s) return '';
+  const mx = r.subjects.reduce((a,x)=>a+Number(x.total||0),0);
+  const ob = r.subjects.reduce((a,x)=>a+Number(x.obtained||0),0);
+  const pct = mx ? ((ob/mx)*100).toFixed(1) : 0;
+  const g = getGrade(pct);
+  return '<div style="border:2px solid var(--primary);padding:20px;border-radius:10px;">' +
+    '<div style="text-align:center;border-bottom:2px solid var(--primary);padding-bottom:10px;margin-bottom:14px;">' +
+    '<h2 style="color:var(--primary-dark);">IPS — Iqra Private School, Chapahari</h2>' +
+    '<p style="font-size:12px;color:var(--muted);">Smart School Management</p>' +
+    '<p style="font-weight:700;margin-top:6px;">'+r.exam+' — '+T('result_card')+'</p></div>' +
+    '<table style="margin-bottom:14px;"><tr><td><strong>'+T('name')+':</strong> '+s.name+'</td><td><strong>'+T('class')+':</strong> '+s.className+'-'+s.section+'</td><td><strong>'+T('roll')+':</strong> '+(s.rollNo||'-')+'</td></tr>' +
+    '<tr><td colspan="2"><strong>'+T('father')+':</strong> '+(s.fatherName||'-')+'</td><td><strong>'+T('date')+':</strong> '+(r.date||'')+'</td></tr></table>' +
+    '<div style="overflow-x:auto;"><table><thead><tr><th>'+T('subject_name')+'</th><th>'+T('total')+'</th><th>'+T('obtained')+'</th><th>'+T('grade')+'</th></tr></thead><tbody>' +
+    r.subjects.map(x=>{const p=Number(x.total)?(Number(x.obtained)/Number(x.total)*100):0;return'<tr><td>'+x.name+'</td><td>'+x.total+'</td><td>'+x.obtained+'</td><td>'+getGrade(p)+'</td></tr>';}).join('') +
+    '</tbody><tfoot><tr style="font-weight:700;background:#f9fafb;"><td>'+T('total')+'</td><td>'+mx+'</td><td>'+ob+'</td><td>'+g+'</td></tr></tfoot></table></div>' +
+    '<div style="margin-top:14px;padding:10px;background:#f0fdf4;border-radius:8px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">' +
+    '<span><strong>'+T('percentage')+':</strong> '+pct+'%</span><span><strong>'+T('grade')+':</strong> '+g+'</span><span><strong>'+T('position')+':</strong> '+getPosition(r)+'</span></div>' +
+    '<div style="margin-top:30px;display:flex;justify-content:space-between;font-size:12px;"><span>____________________<br>'+T('class_teacher')+'</span><span>____________________<br>'+T('principal')+'</span></div></div>';
+}
+function renderTabulation(){
+  const exams = [...new Set(db.results.map(r=>r.exam))];
+  document.getElementById('resBody').innerHTML =
+    '<div class="toolbar"><label class="field">'+T('exam')+'<select id="tabExam" onchange="renderTabPreview()">' +
+    exams.map(e=>'<option>'+e+'</option>').join('')+'</select></label>' +
+    '<label class="field">'+T('class')+'<select id="tabClass" onchange="renderTabPreview()">' +
+    classes().map(c=>'<option>'+c+'</option>').join('')+'</select></label>' +
+    '<button class="btn" onclick="printSection(\'results\')">'+T('print')+'</button></div><div id="tabPreview"></div>';
+  renderTabPreview();
+}
+function renderTabPreview(){
+  const exam = document.getElementById('tabExam')?.value;
+  const cls = document.getElementById('tabClass')?.value;
+  const el = document.getElementById('tabPreview');
+  if(!exam || !cls){ el.innerHTML=''; return; }
+  const results = db.results.filter(r=>{const s=studentById(r.studentId);return r.exam===exam && s && s.className===cls;});
+  if(!results.length){ el.innerHTML = '<div class="empty">'+T('no_results_class')+'</div>'; return; }
+  const subjSet = new Set();
+  results.forEach(r=>r.subjects.forEach(x=>subjSet.add(x.name)));
+  const subjects = [...subjSet];
+  el.innerHTML = '<div style="margin-bottom:10px;"><strong>'+T('exam')+':</strong> '+exam+' · <strong>'+T('class')+':</strong> '+cls+'</div>' +
+    '<div style="overflow-x:auto;"><table><thead><tr><th>'+T('roll')+'</th><th>'+T('name')+'</th>' +
+    subjects.map(s=>'<th>'+s+'</th>').join('') +
+    '<th>'+T('total')+'</th><th>%</th><th>'+T('grade')+'</th></tr></thead><tbody>' +
+    results.map(r=>{
+      const s = studentById(r.studentId);
+      const marks = {}; r.subjects.forEach(x=>marks[x.name]=x.obtained);
+      const mx = r.subjects.reduce((a,x)=>a+Number(x.total||0),0);
+      const ob = r.subjects.reduce((a,x)=>a+Number(x.obtained||0),0);
+      const pct = mx ? (ob/mx*100).toFixed(1) : 0;
+      return '<tr><td>'+s.rollNo+'</td><td>'+s.name+'</td>' +
+        subjects.map(sub=>'<td>'+(marks[sub] ?? '-')+'</td>').join('') +
+        '<td><strong>'+ob+'</strong></td><td>'+pct+'%</td><td>'+getGrade(pct)+'</td></tr>';
+    }).join('') + '</tbody></table></div>';
+}
+
+// ============ Fees ============
+function renderFees(){
+  document.getElementById('fees').innerHTML =
+    '<div class="card"><h2>'+T('fees')+'</h2>' +
+    '<div class="toolbar"><label class="field">'+T('student')+'<select id="feeStudent"><option value="">'+T('select')+'</option>' +
+    db.students.map(s=>'<option value="'+s.id+'">'+studentLabel(s)+'</option>').join('') +
+    '</select></label><label class="field">'+T('month')+'<input type="month" id="feeMonth" value="'+monthNow()+'"></label>' +
+    '<label class="field">'+T('amount')+'<input type="number" id="feeAmount"></label>' +
+    '<label class="field">'+T('date')+'<input type="date" id="feeDate" value="'+today()+'"></label>' +
+    '<button class="btn" onclick="addFee()">'+T('add')+'</button></div><div id="feeList"></div></div>';
+  renderFeeList();
+}
+function addFee(){
+  const sid = document.getElementById('feeStudent').value;
+  const month = document.getElementById('feeMonth').value;
+  const amount = Number(document.getElementById('feeAmount').value);
+  const date = document.getElementById('feeDate').value;
+  if(!sid || !month || !amount){ alert(T('all_fields_req')); return; }
+  db.feeCounter = (db.feeCounter||0) + 1;
+  const receiptNo = 'IPS-'+new Date().getFullYear()+'-'+String(db.feeCounter).padStart(4,'0');
+  db.fees.push({id:uid('f'),studentId:sid,month,amount,date,receiptNo});
+  save(); renderFeeList(); document.getElementById('feeAmount').value = '';
+}
+function renderFeeList(){
+  const el = document.getElementById('feeList');
+  const list = db.fees.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  if(!list.length){ el.innerHTML = '<div class="empty">'+T('no_fees')+'</div>'; return; }
+  const total = list.reduce((a,f)=>a+Number(f.amount||0),0);
+  el.innerHTML = '<div class="hint" style="margin-bottom:8px;">'+T('total_fees')+': <strong>Rs '+total.toLocaleString()+'</strong></div>' +
+    '<div style="overflow-x:auto;"><table><thead><tr><th>'+T('receipt_no')+'</th><th>'+T('date')+'</th><th>'+T('student')+'</th><th>'+T('month')+'</th><th>'+T('amount')+'</th><th>'+T('actions')+'</th></tr></thead><tbody>' +
+    list.map(f=>'<tr><td>'+(f.receiptNo||'-')+'</td><td>'+f.date+'</td><td>'+(studentById(f.studentId)?.name||'?')+'</td><td>'+f.month+'</td><td>Rs '+Number(f.amount).toLocaleString()+'</td>' +
+      '<td class="row-actions"><button class="btn gold small" onclick="showReceipt(\''+f.id+'\')">'+T('print_receipt')+'</button>' +
+      '<button class="btn danger small" onclick="deleteFee(\''+f.id+'\')">'+T('del')+'</button></td></tr>').join('') +
+    '</tbody></table></div>';
+}
+function deleteFee(id){
+  if(!confirm(T('confirm_delete'))) return;
+  db.fees = db.fees.filter(f=>f.id!==id); save(); renderFeeList();
+}
+function showReceipt(id){
+  const f = db.fees.find(x=>x.id===id);
+  const s = studentById(f.studentId);
+  if(!s){ alert('Student not found'); return; }
+  const html = '<div class="receipt">' +
+    '<div class="receipt-head"><h3>IPS — Iqra Private School, Chapahari</h3><div class="sub">Smart School Management</div></div>' +
+    '<div style="text-align:center;font-weight:800;margin-bottom:8px;color:var(--primary);">'+T('receipt')+'</div>' +
+    '<div class="receipt-body">' +
+    '<div class="line"><span>'+T('receipt_no')+':</span><strong>'+(f.receiptNo||'-')+'</strong></div>' +
+    '<div class="line"><span>'+T('date')+':</span><strong>'+f.date+'</strong></div>' +
+    '<div class="line"><span>'+T('received_from')+':</span><strong>'+s.name+'</strong></div>' +
+    '<div class="line"><span>'+T('father')+':</span><strong>'+(s.fatherName||'-')+'</strong></div>' +
+    '<div class="line"><span>'+T('class')+':</span><strong>'+s.className+'-'+s.section+'</strong></div>' +
+    '<div class="line"><span>'+T('roll')+':</span><strong>'+(s.rollNo||'-')+'</strong></div>' +
+    '<div class="line"><span>'+T('month')+':</span><strong>'+f.month+'</strong></div>' +
+    '</div>' +
+    '<div class="receipt-total">'+T('amount_paid')+': Rs '+Number(f.amount).toLocaleString()+'</div>' +
+    '<div style="text-align:center;margin-top:14px;"><span style="display:inline-block;border:2px solid var(--primary);color:var(--primary);padding:4px 16px;border-radius:6px;font-weight:800;letter-spacing:2px;">'+T('paid')+'</span></div>' +
+    '<div class="receipt-foot"><span>'+T('sign')+'</span><span>'+f.date+'</span></div>' +
+    '<div class="receipt-no">— IPS — Iqra Private School, Chapahari —</div>' +
+    '</div>' +
+    '<div class="modal-actions no-print"><button class="btn ghost" onclick="this.closest(\'.modal-overlay\').remove()">'+T('cancel')+'</button>' +
+    '<button class="btn" onclick="printReceipt(this)">'+T('print')+'</button></div>';
+  openModal(html);
+}
+function printReceipt(btn){
+  const receiptHTML = btn.closest('.modal').querySelector('.receipt').outerHTML;
+  const w = window.open('', '_blank', 'width=700,height=900');
+  w.document.write('<html><head><title>Receipt</title><link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&family=Noto+Sans+Devanagari&display=swap" rel="stylesheet"><style>' +
+    'body{font-family:\'Noto Sans\',Tahoma,sans-serif;padding:20px;color:#1f2937}' +
+    (LANG==='ur'?'body{font-family:\'Noto Nastaliq Urdu\',sans-serif;direction:rtl;line-height:2.2}':'') +
+    (LANG==='hi'?'body{font-family:\'Noto Sans Devanagari\',sans-serif}':'') +
+    '.receipt{border:2px solid #0b6b3a;border-radius:10px;padding:18px;max-width:500px;margin:0 auto}' +
+    '.receipt-head{text-align:center;border-bottom:2px dashed #0b6b3a;padding-bottom:8px;margin-bottom:12px}' +
+    '.receipt-head h3{color:#084d29;font-size:16px;margin:0}' +
+    '.receipt-head .sub{font-size:11px;color:#6b7280}' +
+    '.receipt-body{font-size:13px}' +
+    '.receipt-body .line{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dotted #e5e7eb}' +
+    '.receipt-body .line strong{color:#084d29}' +
+    '.receipt-total{margin-top:12px;padding:10px;background:#f0fdf4;border-radius:8px;text-align:center;font-size:16px;font-weight:800;color:#084d29}' +
+    '.receipt-foot{margin-top:20px;display:flex;justify-content:space-between;font-size:11px;color:#6b7280}' +
+    '.receipt-no{text-align:center;font-size:11px;color:#6b7280;margin-top:8px}' +
+    '.modal-actions{display:none}' +
+    '</style></head><body>'+receiptHTML+'<script>window.onload=function(){window.print();}<\/script></body></html>');
+  w.document.close();
+}
+
+// ============ Notes ============
+function renderNotes(){
+  document.getElementById('notes').innerHTML =
+    '<div class="card"><h2>'+T('notes')+'</h2>' +
+    '<div class="toolbar"><label class="field">'+T('class')+'<input id="noteClass" placeholder="5 / '+T('all')+'"></label>' +
+    '<label class="field">'+T('title')+'<input id="noteTitle"></label></div>' +
+    '<label class="field">'+T('details')+'<textarea id="noteBody" rows="2"></textarea></label>' +
+    '<button class="btn" onclick="addNote()">'+T('add_note')+'</button>' +
+    '<div id="notesList" style="margin-top:14px;"></div></div>';
+  renderNotesList();
+}
+function addNote(){
+  const title = document.getElementById('noteTitle').value.trim();
+  const body = document.getElementById('noteBody').value.trim();
+  const cls = document.getElementById('noteClass').value.trim() || T('all');
+  if(!title){ alert(T('req_fields')); return; }
+  db.notes.push({id:uid('n'),title,body,className:cls,date:today()});
+  save(); renderNotesList();
+  document.getElementById('noteTitle').value = '';
+  document.getElementById('noteBody').value = '';
+}
+function renderNotesList(){
+  const el = document.getElementById('notesList');
+  const list = db.notes.slice().reverse();
+  if(!list.length){ el.innerHTML = '<div class="empty">'+T('no_notes')+'</div>'; return; }
+  el.innerHTML = list.map(n=>'<div style="border:1px solid var(--border);padding:12px;border-radius:8px;margin-bottom:8px;">' +
+    '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;"><strong>'+n.title+'</strong>' +
+    '<span style="font-size:12px;color:var(--muted);">'+T('class')+' '+n.className+' · '+n.date+'</span></div>' +
+    (n.body ? '<div style="margin-top:6px;font-size:14px;">'+n.body+'</div>' : '') +
+    '<button class="btn danger small" style="margin-top:8px;" onclick="deleteNote(\''+n.id+'\')">'+T('del')+'</button></div>').join('');
+}
+function deleteNote(id){
+  if(!confirm(T('confirm_delete'))) return;
+  db.notes = db.notes.filter(n=>n.id!==id); save(); renderNotesList();
+}
+
+// ============ Timetable ============
+const DAYS = ['mon','tue','wed','thu','fri','sat'];
+const PERIODS = 7;
+let ttClass = '';
+function renderTimetable(){
+  const cls = classes();
+  if(!ttClass) ttClass = cls[0] || '';
+  if(!db.timetable[ttClass]) db.timetable[ttClass] = {};
+  document.getElementById('timetable').innerHTML =
+    '<div class="card"><h2>'+T('timetable')+'</h2>' +
+    '<div class="toolbar"><label class="field">'+T('class')+'<select onchange="ttClass=this.value; renderTimetable()">' +
+    (cls.map(c=>'<option value="'+c+'" '+(c===ttClass?'selected':'')+'>'+T('class')+' '+c+'</option>').join('') || '<option>--</option>') +
+    '</select></label></div><div style="overflow-x:auto;"><table><thead><tr><th>'+T('day')+'</th>' +
+    Array.from({length:PERIODS},(_,i)=>'<th>'+T('period')+' '+(i+1)+'</th>').join('')+'</tr></thead><tbody>' +
+    DAYS.map(d=>'<tr><td><strong>'+T('day_'+d)+'</strong></td>' +
+      Array.from({length:PERIODS},(_,i)=>{
+        const v = (db.timetable[ttClass][d]||[])[i]||'';
+        return '<td><input value="'+v+'" onchange="setTT(\''+d+'\','+i+',this.value)" style="min-width:90px;font-size:12px;padding:5px"></td>';
+      }).join('') + '</tr>').join('') +
+    '</tbody></table></div></div>';
+}
+function setTT(day, i, val){
+  if(!db.timetable[ttClass]) db.timetable[ttClass] = {};
+  if(!db.timetable[ttClass][day]) db.timetable[ttClass][day] = Array(PERIODS).fill('');
+  db.timetable[ttClass][day][i] = val; save();
+}
+
+// ============ Print ============
+function printSection(pageId){
+  const page = document.getElementById(pageId);
+  const was = page.classList.contains('active');
+  if(!was) page.classList.add('active');
+  document.body.classList.add('printing');
+  page.classList.add('print-target');
+  setTimeout(()=>{
+    window.print();
+    page.classList.remove('print-target');
+    document.body.classList.remove('printing');
+    if(!was) page.classList.remove('active');
+  }, 120);
+}
+
+// ============ Backup ============
+function exportData(){
+  const blob = new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'IPS_backup_'+today()+'.json'; a.click();
+  URL.revokeObjectURL(url);
+}
+function importData(e){
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const data = JSON.parse(r.result);
+      if(confirm(T('confirm_delete'))){ db = data; save(); alert(T('saved')); location.reload(); }
+    }catch(err){ alert('Invalid file'); }
+  };
+  r.readAsText(f);
+}
+
+// ============ Init ============
+(function init(){
+  applyLang();
+  const savedUser = sessionStorage.getItem('ips_user');
+  if(savedUser){
+    try{
+      CURRENT_USER = JSON.parse(savedUser);
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appScreen').style.display = 'block';
+      applyLang();
+      renderPage('dashboard');
+    }catch(e){}
+  }
+})();
+</script>
+</body>
+</html>
